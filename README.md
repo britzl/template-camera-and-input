@@ -1,13 +1,18 @@
-# Welcome to Defold
+# Camera and Input template
+This project template can be used as a starting point for top down strategy games or point and click games where you need both a camera and mouse input on game objects. The template uses the following libraries:
 
-This project was created from the "empty" project template.
+* [Defold-Orthographic](https://github.com/britzl/defold-orthographic) - 2D camera solution
+* [Defold-input](https://github.com/britzl/defold-input) - Input utilities, and in this case specifically the cursor module to handle drag, click over/out etc
 
-The settings in ["game.project"](defold://open?path=/game.project) are all the default. A bootstrap empty ["main.collection"](defold://open?path=/main/main.collection) is included.
+# Usage
+You can use theis template project in two ways:
 
-Check out [the documentation pages](https://defold.com/learn) for examples, tutorials, manuals and API docs.
+1. Download the project as a zip file, unpack it and open in Defold
+2. Click on the green "Use this template" button to make a copy of the project on your own GitHub account
 
-If you run into trouble, help is available in [our forum](https://forum.defold.com).
+# Demo
+Test an HTML5 version here: https://britzl.github.io/CameraInput/
 
-Happy Defolding!
+Click and drag on the map to move it. Mouse wheel to zoom.
 
----
+Click and drag on tanks to move them. Infantry can't be dragged.
