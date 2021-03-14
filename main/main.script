@@ -1,0 +1,73 @@
+local camera = require "orthographic.camera"
+local cursor = require "in.cursor"
+
+local CAMERA_ID = hash("/mapcamera")
+local CURSOR_ID = hash("/cursor")
+local MAP_ID = hash("/map")
+
+local MIN_ZOOM = 0.2
+local MAX_ZOOM = 5.0
+
+local ZOOM_IN = hash("zoom_in")
+local ZOOM_OUT = hash("zoom_out")
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	-- listen to cursor events so that we can optionally prevent some of them
+	timer.delay(0, false, function()
+		cursor.listen(msg.url("#cursor"), cursor.DRAG_START, function(message_id, message)
+			if message.group == hash("infantry") then
+				print("You can't drag infantry!")
+				return true
+			end
+		end)
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	-- the cursor script will send back mouse pressed and released event
+	-- if the player clicked on some unit the unit id will be included
+	-- in the message
+	if message_id == cursor.CLICKED then
+		print("Click on:", message.id)
+	elseif message_id == cursor.DRAG_START then
+		if not message.id then
+			self.map_drag_start_pos = go.get_position(MAP_ID)
+		end
+	elseif message_id == cursor.DRAG then
+		if not message.id then
+			local map_pos = self.map_drag_start_pos - vmath.vector3(message.dx, message.dy, 0)
+			go.set_position(map_pos, MAP_ID)
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	-- screen coordinates of mouse/touch
+	local screen = vmath.vector3(action.x, action.y, 0)
+	-- convert to world position
+	local world = camera.screen_to_world(CAMERA_ID, screen)
+	-- update cursor position
+	go.set_position(world)
+
+	-- handle mouse wheel zoom in and out and cap zoom to min/max
+	if action_id == ZOOM_IN then
+		local zoom = camera.get_zoom(CAMERA_ID)
+		zoom = zoom + (0.1 * zoom)
+		if zoom > MAX_ZOOM then zoom = MAX_ZOOM end
+		camera.set_zoom(CAMERA_ID, zoom)
+	elseif action_id == ZOOM_OUT then
+		local zoom = camera.get_zoom(CAMERA_ID)
+		zoom = zoom - (0.1 * zoom)
+		if zoom < MIN_ZOOM then zoom = MIN_ZOOM end
+		camera.set_zoom(CAMERA_ID, zoom)
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

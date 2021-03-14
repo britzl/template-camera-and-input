@@ -1,5 +1,6 @@
 [bootstrap]
 main_collection = /main/main.collectionc
+render = /orthographic/render/orthographic.renderc
 
 [script]
 shared_state = 1
@@ -10,3 +11,11 @@ height = 640
 
 [android]
 input_method = HiddenInputField
+
+[project]
+dependencies = https://github.com/britzl/defold-orthographic/archive/2.11.3.zip,https://github.com/britzl/defold-input/archive/3.0.0.zip,https://github.com/defold/defold-examples/releases/download/0.2.0/war-battles.zip
+title = Camera And Input
+
+[tilemap]
+max_tile_count = 8192
+
